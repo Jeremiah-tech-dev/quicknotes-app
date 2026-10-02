@@ -32,14 +32,43 @@ function render() {
     date.textContent = note.createdAt;
 
     content.append(text, category, date);
-    card.append(content);
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.classList.add("delete-btn");
+    deleteButton.textContent = "Delete";
+    deleteButton.addEventListener("click", () => deleteNote(note.id));
+
+    card.append(content, deleteButton);
     list.append(card);
   });
+
+  if (notes.length === 0) {
+    count.textContent = "You have no notes yet.";
+  } else if (notes.length === 1) {
+    count.textContent = "You have 1 note.";
+  } else {
+    count.textContent = `You have ${notes.length} notes.`;
+  }
+}
+
+function deleteNote(id) {
+  notes = notes.filter((note) => note.id !== id);
+  render();
 }
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const noteText = input.value.trim();
+  if (noteText === "") {
+    errorMessage.textContent = "Please type a note first.";
+    return;
+  }
+  if (noteText.length > 200) {
+    errorMessage.textContent = "Notes must be 200 characters or fewer.";
+    return;
+  }
+
+  errorMessage.textContent = "";
   const note = {
     id: Date.now(),
     text: noteText,

@@ -113,4 +113,11 @@ form.addEventListener("submit", (event) => {
 
 searchInput.addEventListener("input", render);
 
+clearAllButton.addEventListener("click", () => {
+  if (!confirm("Delete all notes?")) return;
+  notes = [];
+  saveNotes();
+  render();
+});
+
 render();
